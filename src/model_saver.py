@@ -31,6 +31,8 @@ class ModelSaver():
             raise ValueError(f"Invalid format {format}. Valid formats are 'json' and 'pkl'")
 
     def load(self, model:Any, path:str, format:str="json") -> None:
+        if not isinstance(path, str):
+            raise TypeError(f"path: expected str, got {type(path)}")
         if format == "json":    
             self._load_json(model, path)
         elif format in ("pkl", "pickle"):
