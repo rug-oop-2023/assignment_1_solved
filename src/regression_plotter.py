@@ -29,7 +29,7 @@ class RegressionPlotter():
             model.train(X[:,[i]], y)
             sub_plotter = RegressionPlotter(model)
             sub_plotter._plot_single_feature(X[:,i], y, ax[i], feature_names[i], target_name)
-        fig.show()
+        plt.show()
     
     def _plot_two_features(self, X:np.ndarray, y:np.ndarray, feature_names:List[str]=("Feature 1", "Feature 2"), target_name:str="Target") -> None:
         # make 3d plot
@@ -45,7 +45,7 @@ class RegressionPlotter():
         ax.set_xlabel(feature_names[0])
         ax.set_ylabel(feature_names[1])
         
-        fig.show()
+        plt.show()
 
     def _check_dimensions(self, X:np.ndarray, y:np.ndarray) -> None:
         if X.shape[0] != y.shape[0]:
