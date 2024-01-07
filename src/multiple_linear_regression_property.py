@@ -18,6 +18,7 @@ class MultipleLinearRegression():
         self._parameters = np.concatenate(
             [params_dict["intercept"], params_dict["weights"]]
             )
+        print(f"Incoming parameters:\n{params_dict}\nNew params\n{self._parameters}")
         
     @parameters.getter
     def parameters(self) -> dict:
@@ -37,12 +38,29 @@ class MultipleLinearRegression():
         if array.dtype not in [np.float64, np.float32, np.int64, np.int32]:
             raise TypeError(f"{name}: expected numpy.ndarray of numeric types, got {array.dtype}")
     
-    def train(self, X:np.ndarray, y:np.ndarray) -> None:
+    def train(self, X:np.ndarray, y:np.ndarray, verbose:bool=False) -> None:
         self._check_input_data(X, "X")
         self._check_input_data(y, "y")
+        print(f"Incoming X:\n{X}\nIncoming y:\n{y}")
+        print(f"X shape: {X.shape}\ny shape: {y.shape}")
+
         try:
-            X = np.c_[np.ones(X.shape[0]), X]
-            params = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y).flatten()
+            X_new = np.concatenate([np.ones(X.shape[0]), X])
+            if verbose:
+                print(f"X after adding intercept:\n{X_new}")
+                print(f"X shape after adding intercept: {X_new.shape}")
+            params = np.linalg.inv(X.T.dot(X))
+            print(f"X^T X:\n{params}")
+            print(f"X^T X shape: {params.shape}")
+            params = params.dot(X.T)
+            print(f"(X^T X)^-1 X^T:\n{params}")
+            print(f"(X^T X)^-1 X^T shape: {params.shape}")
+            params = params.dot(y)
+            print(f"(X^T X)^-1 X^T y:\n{params}")
+            print(f"(X^T X)^-1 X^T y shape: {params.shape}")
+            params = params.flatten()
+            print(f"Flattened params:\n{params}")
+            print(f"Flattened params shape: {params.shape}")
             self._parameters = params
         except np.linalg.LinAlgError:
             raise ValueError("The matrix X^T X is not invertible. Please check that the features are not linearly dependent.")
